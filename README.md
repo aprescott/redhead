@@ -4,6 +4,24 @@ Redhead is for header metadata in strings, in the style of HTTP and email. It ma
 
 # How do I use this thing?
 
+To install from RubyGems:
+
+    gem install redhead
+
+To get the source:
+
+    git clone https://github.com/aprescott/redhead.git
+
+To run the tests with the source:
+
+    rake test
+
+To contribute:
+
+* Fork it
+* Make a new feature branch: `git checkout -b some-new-thing master`
+* Pull request
+
 ## Basics
 
 A variable `post` referencing a simple string can be wrapped up in a `Redhead::String` object.
