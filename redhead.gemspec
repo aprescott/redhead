@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.homepage     = "https://github.com/aprescott/redhead"
   s.summary      = "String header metadata."
   s.description  = "String header metadata."
-  s.files        = Dir["{lib/**/*,test/**/*}"] + %w[LICENSE Gemfile rakefile README.md]
+  s.files        = Dir["{lib/**/*,test/**/*}"] + %w[.gemtest LICENSE Gemfile rakefile README.md]
   s.require_path = "lib"
   s.test_files   = Dir["test/*"]
   s.has_rdoc     = false
