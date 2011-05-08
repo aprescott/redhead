@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
   s.name         = "redhead"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.authors      = ["Adam Prescott"]
   s.email        = ["adam@aprescott.com"]
   s.homepage     = "https://github.com/aprescott/redhead"
   s.summary      = "String header metadata."
   s.description  = "String header metadata."
-  s.files        = Dir["{lib/**/*,test/**/*}"] + %w[.gemtest LICENSE Gemfile rakefile README.md]
+  s.files        = Dir["{lib/**/*,test/**/*}"] + %w[redhead.gemspec .gemtest LICENSE Gemfile rakefile README.md]
   s.require_path = "lib"
   s.test_files   = Dir["test/*"]
   s.has_rdoc     = false
