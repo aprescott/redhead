@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.files        = Dir["{lib/**/*,test/**/*}"] + %w[redhead.gemspec .gemtest LICENSE Gemfile rakefile README.md]
   s.require_path = "lib"
   s.test_files   = Dir["test/*"]
-  s.has_rdoc     = false
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
 end
