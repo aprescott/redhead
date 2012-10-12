@@ -14,26 +14,6 @@ describe Redhead::String do
         Redhead::String[@string].should == Redhead::String.new(@string)
       end
     end
-    
-    describe "self.new" do
-      context "with a given block:" do
-        it "uses the given block as to_key" do
-          Redhead::String.new(@string) { :foo }.headers.first.key.should == :foo
-        end
-        
-        it "sets the given block as the HeaderSet's to_key" do
-          # note: Proc#== bug!
-          blk = proc { :foo }
-          Redhead::String.new(@string, &blk).headers.to_key.should == blk
-        end
-        
-        it "sets each individual header's to_key to the given block" do
-          # note: Proc#== bug!
-          blk = proc { :foo }
-          Redhead::String.new(@string, &blk).headers.each { |header| header.to_key.should == blk }
-        end
-      end
-    end
   end
   
   context "before any modifications:" do

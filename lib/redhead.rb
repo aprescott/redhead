@@ -20,16 +20,6 @@ module Redhead
   
   # The default code to convert a given raw header name to a key.
   TO_KEY = lambda { |raw| raw.split(/[^a-z_]+/i).join("_").downcase.to_sym }
-  
-  # Method wrapping TO_RAW, to allow overriding for customisation.
-  def self.to_raw
-    TO_RAW
-  end
-  
-  # Method wrapping TO_KEY, to allow overriding for customisation.
-  def self.to_key
-    TO_KEY
-  end
 end
 
 require "redhead/header"

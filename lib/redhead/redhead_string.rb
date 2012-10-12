@@ -9,15 +9,13 @@ module Redhead
     end
     
     # Takes _string_, splits the headers from the content using HEADERS_SEPARATOR_PATTERN, then
-    # creates the headers by calling HeaderSet.parse, passing in _block_. Sets #to_key to _block_,
-    # and calls super with the main body content as an argument.
-    def initialize(string, &block)
+    # creates the headers by calling HeaderSet.parse.
+    def initialize(string)
       string =~ HEADERS_SEPARATOR_PATTERN
       @string = $'
       super(@string)
       
-      @headers = Redhead::HeaderSet.parse($`, &block)
-      @headers.to_key = block
+      @headers = Redhead::HeaderSet.parse($`)
     end
     
     # Returns the main body content wrapped in the Redhead String object.

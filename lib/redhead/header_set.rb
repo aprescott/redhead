@@ -9,10 +9,10 @@ module Redhead
     
     # Parses lines of header strings with Header.parse. Returns a new HeaderSet object
     # for the parsed headers.
-    def self.parse(header_string, &block)
+    def self.parse(header_string)
       headers = []
       header_string.split("\n").each do |str|
-        headers << Redhead::Header.parse(str, &block)
+        headers << Redhead::Header.parse(str)
       end
       
       new(headers)
@@ -34,15 +34,13 @@ module Redhead
     end
     
     # If there is a header in the set with a key matching _key_, then set its value to _value_.
-    # If there is no header matching _key_, create a new header with the given key and value,
-    # with a raw header equal to to_raw[key]. Sets the new header's to_raw to self#to_raw.
+    # If there is no header matching _key_, create a new header with the given key and value.
     def []=(key, value)
       h = self[key]      
       if h
         h.value = value
       else
-        new_header = Redhead::Header.new(key, to_raw[key], value)
-        new_header.to_raw = to_raw
+        new_header = Redhead::Header.new(key, TO_RAW[key], value)
         self << new_header
       end
     end
@@ -54,8 +52,7 @@ module Redhead
     
     # Similar to #[]= but allows manually setting the value of Header#raw to _raw_.
     def add(key, value, raw = nil)
-      new_header = Redhead::Header.new(key, raw || to_raw[key], value)
-      new_header.to_raw = to_raw
+      new_header = Redhead::Header.new(key, raw || TO_RAW[key], value)
       self << new_header
       new_header
     end
@@ -83,40 +80,13 @@ module Redhead
       end.join("\n")
     end
     
-    # If a block is given, passes the block to Header#to_s! otherwise passes #to_raw instead. Joins
+    # If a block is given, passes the block to Header#to_s! Joins
     # the result with newlines.
     def to_s!(&block)
-      blk = block || to_raw
+      blk = block || TO_RAW
       @headers.map { |header| header.to_s!(&blk) }.join("\n")
     end
-    
-    # Returns true if Header#reversible? is true for each header in the set, otherwise false.
-    def reversible?
-      all? { |header| header.reversible? }
-    end
-    
-    # Returns the Proc to be used to convert key names to raw header names. Defaults to Redhead.to_raw.
-    def to_raw
-      @to_raw || Redhead.to_raw
-    end
-    
-    # Sets HeaderSet#to_raw to _new_to_raw_. Sets Header#to_raw for each header in the set to _new_to_raw_.
-    def to_raw=(new_to_raw)
-      @to_raw = new_to_raw
-      each { |header| header.to_raw = new_to_raw }
-    end
-    
-    # Returns the Proc to be used to convert raw header names to key names. Defaults to Redhead.to_key.
-    def to_key
-      @to_key || Redhead.to_key
-    end
-    
-    # Sets HeaderSet#to_raw to _new_to_raw_. Sets Header#to_raw for each header in the set to _new_to_raw_.
-    def to_key=(new_to_key)
-      @to_key = new_to_key
-      each { |header| header.to_key = new_to_key }
-    end
-    
+        
     def inspect
       "{ #{@headers.map { |header| header.inspect }.join(", ")} }"
     end

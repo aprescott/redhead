@@ -165,8 +165,6 @@ There are conventions followed in creating a Redhead string and modifying certai
 
 By default, newly added header field names (i.e., the keys) will become capitalised and hyphen-separated to create their raw header name, so that the symbolic header name `:if_modified_since` becomes the raw header name `If-Modified-Since`. A similar process also happens when turning a string into a Redhead string (in reverse), and when using the default behaviour of `to_s`. To keep symbol names pleasant, by default, anything which isn't `A-Z`, `a-z` or `_` is converted into a `_` character. So `"Some! Long! Header! Name!"` becomes `:some_long_header_name` for accessing within Ruby.
 
-For information on changing the formatting rules, see the section on <a href="#special_circumstances">special circumstances</a>.
-
 ## Header name memory
 
 Original header names are remembered from the input string, and not simply created on-the-fly when using `to_s`. This is to make sure you get the same raw heading name, as a string, that you originally read in, instead of assuming you want it to be changed. Access as a Ruby object, however, is with a symbol by default.
@@ -341,120 +339,6 @@ The custom raw header name can also be given explicitly at creation time.
 	
 	>> str.headers.to_s
 	=> "Awesome-Rating: quite\nA-Rather-Temporary-Value: temp"
-
-# Enterprise Header Solutions
-
-As mentioned, Redhead performs two conversions. One to produce a symbolic header name from the raw header name, and one to produce the raw header name from the symbolic header name. The symbolic -> raw process is used in `to_s!`, to force header names to be produced instead of using the header name remembered from when the header was created.
-
-If you need to control the format of header names beyond the simple separator option given above, you can provide a block, the result of which is the name used for the raw or symbolic header name.
-
-If that doesn't make a lot of sense on the first read, don't worry, here's some code.
-
-	>> string = "A-Header-Name: a header value\n\nContent."
-	=> "A-Header-Name: a header value\n\nContent."
-	
-	>> str = Redhead::String.new(string) do |name|
-	?>   name.split(/-/).join("").upcase.to_sym
-	?> end
-	=> +"Content."
-	
-	>> str.headers
-	=> { { :AHEADERNAME => "a header value" } }
-
-Note that this uses `Redhead::String.new` instead of `Redhead::String.[]` because of the block argument.
-
-The above defines how symbolic headers are created in when creating the header objects. Using this approach, you can work with non-standard headers quite easily.
-
-Note that `to_sym` is _not_ implicit, to suggest you use a pleasant symbol as the key.
-
-It's also possible to specify the code to be used when calling `to_s`:
-
-	>> str.headers
-	=> { { :AHEADERNAME => "a header value" } }
-	
-	>> str.headers.to_s do |name|
-	?>   name.to_s.downcase.scan(/..?.?/).join("-").capitalize
-	?> end
-	=> "ahe-ade-rna-me: a header value"
-
-The block to `to_s` will not modify the headers in-place, in keeping with the behaviour of the block-less `to_s`. To change how the symbolic-to-raw header name conversion works, you can do so on the object holding the headers.
-
-	>> str.headers.to_raw = lambda do |name|
-	?>   name.to_s.downcase.scan(/..?.?/).join("-").capitalize
-	?> end
-	=> #<Proc:...>
-
-Similarly, you can modify `to_key`. You can also change `to_raw` and `to_key` for each individual header. If no block is given for a specific header, it defaults to the block for the containing `headers` object. If nothing is given _there_, then it goes to the default.
-
-If `to_raw(produced_key) != original_key` for all the headers in the object, then the headers are in a mismatched state. Equally, a single header is in a mismatched state if the condition fails for that header.
-
-This can be checked with `reversible?`.
-
-	>> string = "A-Header-Name: a header value\n\nContent."
-	=> "A-Header-Name: a header value\n\nContent."
-	
-	>> str = Redhead::String.new(string) do |name|
-	?>   name.gsub(/-/, "").upcase.to_sym
-	?> end
-	=> +"Content."
-	
-	# At this point, `to_key` is not reversible via `to_raw`
-	
-	>> str.headers.reversible?
-	=> false
-	
-	>> str = Redhead::String.new(string) do |name|
-	?>   name.split(/-/).map { |e| e.upcase }.join("zzz").to_sym
-	?> end
-	=> +"Content."
-	
-	>> str.headers
-	=> { { :AzzzHEADERzzzNAME => "a header value" } }
-	
-	>> str.headers.reversible?
-	=> false
-	
-	>> str.headers.to_raw = lambda do |name|
-	?>   name.to_s.split(/zzz/).map { |e| e.capitalize }.join("-")
-	?> end
-	=> #<Proc:...> 
-	
-	# We can go back and forth without issue on this string
-	
-	>> str.headers.reversible?
-	=> true
-	
-	>> str.headers
-	=> { { :AzzzHEADERzzzzNAME => "a header value" } }
-	
-	>> str.headers.to_s
-	=> "A-Header-Name: a header value"
-
-Reversibility is checked by calling `reversible?` on all the headers in `str.headers`, since each header can have its own `to_key` and `to_raw` blocks. `reversible?` returning false will not raise an error or stop execution.
-
-When creating new headers, `to_raw`, is used, meaning your custom block will be picked up and used to create the raw header as though it had been created from a string.
-
-	>> str.headers.to_raw = proc { "Genuinely" }
-	
-	>> str.headers[:foo_bar] = "temp"
-	=> "temp"
-	
-	>> temp_header = str.headers[:foo_bar]
-	=> { :foo_bar => "temp" }
-	
-	>> temp_header.to_s
-	=> "Genuinely: temp"
-
-Changing `to_raw` after-the-fact will not change the raw header name stored for the object. To force `to_raw` to be used instead of the stored value, use `to_s!`, which _always_ uses `to_raw`.
-
-	>> temp_header.to_raw = lambda { "nothing meaningful" }
-	=> #<Proc:...>
-	
-	>> temp_header.to_s
-	=> "Temp-Orary-Header: temp"
-	
-	>> temp_header.to_s!
-	=> "nothing meaningful: temp"
 
 # TODO
 
