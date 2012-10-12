@@ -334,7 +334,7 @@ The custom raw header name can also be given explicitly at creation time.
 	>> str.headers
 	=> { { :awesome => "quite" } }
 	
-	>> str.heders.add(:temporary, "temp", "A-Rather-Temporary-Value")
+	>> str.headers.add(:temporary, "temp", "A-Rather-Temporary-Value")
 	=> { :temp => "temp" }
 	
 	>> str.headers.to_s
