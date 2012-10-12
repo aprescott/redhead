@@ -1,6 +1,3 @@
-# Copyright (c) 2010 Adam Prescott
-# Licensed under the MIT license. See LICENSE.
-
 module Redhead
   
   # The character used to separate raw header names from their values.
