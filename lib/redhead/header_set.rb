@@ -11,7 +11,7 @@ module Redhead
     # for the parsed headers.
     def self.parse(header_string)
       headers = []
-      header_string.split("\n").each do |str|
+      header_string.gsub(/\r\n/, "\n").split("\n").each do |str|
         headers << Redhead::Header.parse(str)
       end
       

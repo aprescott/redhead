@@ -10,7 +10,7 @@ module Redhead
   HEADERS_SEPARATOR = "\n\n"
   
   # The actual pattern used to split headers from content.
-  HEADERS_SEPARATOR_PATTERN = /#{HEADERS_SEPARATOR}/m
+  HEADERS_SEPARATOR_PATTERN = /\r?\n\r?\n/m
   
   # The default code to convert a given key to a raw header name.
   TO_RAW = lambda { |key| key.to_s.split(/_/).map(&:capitalize).join("-") }

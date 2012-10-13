@@ -13,6 +13,15 @@ describe Redhead::String do
       it "is equal (==) in result to using .new" do
         Redhead::String[@string].should == Redhead::String.new(@string)
       end
+
+      context "with \\r\\n separators" do
+        subject { Redhead::String["foo: 1\r\nbar: 2\r\n\r\nbody"] }
+
+        it "parses the headers in a retrievable way" do
+          subject.headers[:foo].value.should == "1"
+          subject.headers[:bar].value.should == "2"
+        end
+      end
     end
   end
   
