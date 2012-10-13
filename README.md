@@ -2,6 +2,10 @@
 
 Redhead is for header metadata in strings, in the style of HTTP and email. It makes just a few assumptions about your header names and values, keeps them all as strings, and leaves the rest to you.
 
+# License
+
+MIT License. See LICENSE for details.
+
 # How do I use this thing?
 
 To install from RubyGems:
@@ -21,6 +25,8 @@ To contribute:
 * Fork it
 * Make a new feature branch: `git checkout -b some-new-thing master`
 * Pull request
+
+It will be assumed that your contribution will be licensed under the same terms as the project.
 
 ## Basics
 
