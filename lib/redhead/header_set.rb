@@ -22,6 +22,11 @@ module Redhead
     def each
       @headers.each { |h| yield h }
     end
+
+    # Returns the number of headers in the set.
+    def size
+      @headers.size
+    end
     
     # Returns true if the set of headers is empty.
     def empty?
@@ -86,6 +91,16 @@ module Redhead
       blk = block || TO_RAW
       @headers.map { |header| header.to_s!(&blk) }.join("\n")
     end
+
+    def to_h
+      h = {}
+      each do |header|
+        h[header.key] = header.value
+      end
+      h
+    end
+
+    alias_method :to_hash, :to_h
         
     def inspect
       "{ #{@headers.map { |header| header.inspect }.join(", ")} }"

@@ -113,6 +113,35 @@ describe Redhead::HeaderSet do
       @header_set.delete(:brand_new_key).should be_nil
     end
   end
+
+  # to_hash is an alias for to_h
+
+  [:to_h, :to_hash].each do |meth|
+    describe "##{meth}" do
+      it "returns a Hash instance containing symbol keys and header values" do
+        @header_set.public_send(meth).should == Hash[@headers.map { |header| [header.key, header.value] }]
+      end
+
+      it "contains only keys in the original header" do
+        @header_set.public_send(meth).keys.should == @headers.map { |header| header.key }
+      end
+
+      it "contains correct corresponding values for each key" do
+        h = @header_set.public_send(meth)
+        h.keys.size.should == @header_set.size
+
+        h.each do |key, value|
+          @header_set[key].value.should == value
+        end
+      end
+    end
+  end
+
+  describe "#size" do
+    it "is the number of headers in the set" do
+      @header_set.size.should == @headers.size
+    end
+  end
   
   describe "#to_s" do
     it "equals the individual header to_s results, joined with newlines" do
