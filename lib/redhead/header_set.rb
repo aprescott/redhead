@@ -92,6 +92,14 @@ module Redhead
       @headers.map { |header| header.to_s!(&blk) }.join("\n")
     end
 
+    # Returns a hash from the headers in the set, where keys are
+    # formed from #key and values from #value for each header.
+    #
+    #     rh_string = Redhead::String["foo: bar\nbaz: baaaaz\n\nstring"]
+    #     rh_string.headers.to_h
+    #     
+    #     # A Hash instance:
+    #     #=> { :foo => "bar", :baz => "baaaaz" }
     def to_h
       h = {}
       each do |header|
