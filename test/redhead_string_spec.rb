@@ -22,6 +22,26 @@ describe Redhead::String do
           subject.headers[:bar].value.should == "2"
         end
       end
+
+      it "can handle strings with no headers" do
+        expect { Redhead::String[""] }.to_not raise_error
+        expect { Redhead::String["some content\n\nwith no headers"] }.to_not raise_error
+      end
+    end
+
+    describe ".has_headers?" do
+      it "is true if the string has valid headers" do
+        tests = {
+          "foo: bar\n\ncontent" => true,
+          "foo: bar" => true,
+          "" => false,
+          "some content\n\nhere" => false
+        }
+
+        tests.each do |input, value|
+          Redhead::String.has_headers?(input).should == value
+        end
+      end
     end
   end
   
@@ -44,6 +64,11 @@ describe Redhead::String do
   describe "#headers" do
     it "returns a Redhead::HeaderSet object" do
       @rh_string.headers.is_a?(Redhead::HeaderSet).should be_true
+    end
+
+    it "works for an empty string, too" do
+      s = Redhead::String[""]
+      s.headers.size.should == 0
     end
   end
   

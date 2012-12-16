@@ -7,15 +7,46 @@ module Redhead
     class << self
       alias_method :[], :new
     end
+
+    # Checks if the input string has header lines at the start of its content,
+    # and returns true or false depending on the value.
+    def self.has_headers?(string)
+      return false if string.strip.empty?
+
+      # check if the string itself is entirely headers
+      has_headers_no_content = string.strip.lines.all? do |l|
+        l.split(HEADER_NAME_VALUE_SEPARATOR_PATTERN).length == 2
+      end
+
+      return true if has_headers_no_content
+
+      # split based on the headers separator and see if
+      # all lines before the separator look like headers.
+
+      string =~ HEADERS_SEPARATOR_PATTERN
+      head_content = $`
+
+      return false unless $`
+      
+      head_content.lines.all? do |l|
+        l.split(HEADER_NAME_VALUE_SEPARATOR_PATTERN).length == 2
+      end
+    end
     
     # Takes _string_, splits the headers from the content using HEADERS_SEPARATOR_PATTERN, then
     # creates the headers by calling HeaderSet.parse.
     def initialize(string)
-      string =~ HEADERS_SEPARATOR_PATTERN
-      @string = $'
-      super(@string)
-      
-      @headers = Redhead::HeaderSet.parse($`)
+      if self.class.has_headers?(string)
+        string =~ HEADERS_SEPARATOR_PATTERN
+        @string = $'
+        super(@string)
+        
+        @headers = Redhead::HeaderSet.parse($`)
+      else
+        @string = string
+        super(@string)
+        @headers = Redhead::HeaderSet.new([])
+      end
     end
     
     # Returns the main body content wrapped in the Redhead String object.
