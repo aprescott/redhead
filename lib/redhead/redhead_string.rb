@@ -15,7 +15,7 @@ module Redhead
 
       # check if the string itself is entirely headers
       has_headers_no_content = string.strip.lines.all? do |l|
-        l.split(HEADER_NAME_VALUE_SEPARATOR_PATTERN).length == 2
+        l =~ HEADER_NAME_VALUE_SEPARATOR_PATTERN
       end
 
       return true if has_headers_no_content
@@ -29,7 +29,7 @@ module Redhead
       return false unless $`
       
       head_content.lines.all? do |l|
-        l.split(HEADER_NAME_VALUE_SEPARATOR_PATTERN).length == 2
+        l =~ HEADER_NAME_VALUE_SEPARATOR_PATTERN
       end
     end
     
@@ -37,11 +37,18 @@ module Redhead
     # creates the headers by calling HeaderSet.parse.
     def initialize(string)
       if self.class.has_headers?(string)
-        string =~ HEADERS_SEPARATOR_PATTERN
-        @string = $'
-        super(@string)
-        
-        @headers = Redhead::HeaderSet.parse($`)
+        # if there is a separator between header content and body content
+        if string =~ HEADERS_SEPARATOR_PATTERN
+          @string = $'
+          header_content = $`
+          super(@string)
+
+          @headers = Redhead::HeaderSet.parse(header_content)
+        else
+          # we're dealing with only headers, so pass in the entire original string.
+          # this lets us deal with inputs like new("foo: bar")
+          @headers = Redhead::HeaderSet.parse(string)
+        end
       else
         @string = string
         super(@string)

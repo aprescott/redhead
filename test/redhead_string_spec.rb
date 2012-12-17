@@ -27,6 +27,18 @@ describe Redhead::String do
         expect { Redhead::String[""] }.to_not raise_error
         expect { Redhead::String["some content\n\nwith no headers"] }.to_not raise_error
       end
+
+      it "can handle headers that have the header name-value separator in the value" do
+        test_cases = ["foo: bar:baz", "foo: bar:baz\n", "foo: bar:baz\n\ncontent"]
+
+        test_cases.each do |t|
+          s = Redhead::String[t]
+          s.headers.size.should == 1
+          h = s.headers[:foo]
+          h.should_not be_nil
+          h.value.should == "bar:baz"
+        end
+      end
     end
 
     describe ".has_headers?" do
@@ -35,7 +47,10 @@ describe Redhead::String do
           "foo: bar\n\ncontent" => true,
           "foo: bar" => true,
           "" => false,
-          "some content\n\nhere" => false
+          "some content\n\nhere" => false,
+          "foo: bar:baz" => true,
+          "foo: bar:baz\n" => true,
+          "foo: bar:baz\n\ncontent" => true
         }
 
         tests.each do |input, value|
