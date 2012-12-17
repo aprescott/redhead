@@ -47,6 +47,12 @@ describe Redhead::Header do
           Redhead::Header.parse("#{@header_raw_name}#{before}:#{after}#{@header_value}").key.should == @header_name
         end
       end
+
+      it "handles values with a separator" do
+        header = Redhead::Header.parse("created: 20:30")
+        header.key.should == :created
+        header.value.should == "20:30"
+      end
     end
   end
   
