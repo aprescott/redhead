@@ -26,8 +26,6 @@ To contribute:
 * Make a new feature branch: `git checkout -b some-new-thing master`
 * Pull request
 
-It will be assumed that your contribution will be licensed under the same terms as the project.
-
 ## Basics
 
 A variable `post` referencing a simple string can be wrapped up in a `Redhead::String` object.
