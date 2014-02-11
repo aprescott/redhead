@@ -45,6 +45,9 @@ module Redhead
 
           @headers = Redhead::HeaderSet.parse(header_content)
         else
+          @string = ""
+          super(@string)
+
           # we're dealing with only headers, so pass in the entire original string.
           # this lets us deal with inputs like new("foo: bar")
           @headers = Redhead::HeaderSet.parse(string)
@@ -58,7 +61,7 @@ module Redhead
     
     # Returns the main body content wrapped in the Redhead String object.
     def to_s
-      __getobj__
+      @string
     end
     
     def inspect
@@ -88,11 +91,5 @@ module Redhead
       
       Redhead::HeaderSet.new(changing)
     end
-  end
-  
-  private
-  
-  def __getobj__
-    string
   end
 end

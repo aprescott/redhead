@@ -39,6 +39,11 @@ describe Redhead::String do
           h.value.should == "bar:baz"
         end
       end
+
+      it "handles header-only inputs" do
+        Redhead::String["foo: bar"].to_s.should eq("")
+        Redhead::String["foo: bar\n"].to_s.should eq("")
+      end
     end
 
     describe ".has_headers?" do
