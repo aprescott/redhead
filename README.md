@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/aprescott/redhead.png?branch=master)](https://travis-ci.org/aprescott/redhead)
+
 # What is it?
 
 Redhead is for header metadata in strings, in the style of HTTP and email. It makes just a few assumptions about your header names and values, keeps them all as strings, and leaves the rest to you.
