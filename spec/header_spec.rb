@@ -56,6 +56,10 @@ describe Redhead::Header do
     end
   end
 
+  describe "#inspect" do
+    specify { expect(@header.inspect).to eq('{ :a_header_name => "some value" }') }
+  end
+
   describe "#key" do
     it "returns the symbolic header name" do
       expect(@header.key).to eq(:a_header_name)

@@ -65,6 +65,10 @@ describe Redhead::String do
     end
   end
 
+  describe "#inspect" do
+    specify { expect(@rh_string.inspect).to eq('+"Lorem ipsum dolor sit amet."') }
+  end
+
   context "before any modifications:" do
     describe "#to_s" do
       it "returns a proper String instance" do

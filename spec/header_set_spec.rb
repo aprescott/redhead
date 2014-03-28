@@ -114,7 +114,9 @@ describe Redhead::HeaderSet do
     end
   end
 
-  # to_hash is an alias for to_h
+  describe "#inspect" do
+    specify { expect(@header_set.inspect).to eq('{ { :a => "value_a" }, { :b => "value_b" }, { :c => "value_c" } }') }
+  end
 
   [:to_h, :to_hash].each do |meth|
     describe "##{meth}" do
