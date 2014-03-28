@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/aprescott/redhead.png?branch=master)](https://travis-ci.org/aprescott/redhead)
+[![Build Status](https://travis-ci.org/aprescott/redhead.png?branch=master)](https://travis-ci.org/aprescott/redhead) [![Coverage Status](https://coveralls.io/repos/aprescott/redhead/badge.png)](https://coveralls.io/r/aprescott/redhead)
 
 # What is it?
 
