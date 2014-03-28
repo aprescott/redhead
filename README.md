@@ -20,7 +20,7 @@ To get the source:
 
 To run the tests with the source:
 
-    rake test
+    rake
 
 To contribute:
 
