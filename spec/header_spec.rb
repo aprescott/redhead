@@ -1,4 +1,4 @@
-require "test_helper"
+require "spec_helper"
 
 describe Redhead::Header do
   before(:each) do
@@ -18,22 +18,22 @@ describe Redhead::Header do
 
   context "as a class" do
     it "responds to :parse" do
-      Redhead::Header.respond_to?(:parse).should be_true
+      expect(Redhead::Header.respond_to?(:parse)).to be_true
     end
 
     describe "self.parse" do
       it "parses a string and returns a header" do
         parsed_header = Redhead::Header.parse(@full_header_string)
-        parsed_header.class.should == Redhead::Header
-        parsed_header.should_not be_nil
-        parsed_header.key.should == @header_name
-        parsed_header.value.should == @header_value
-        parsed_header.raw.should == @header_raw_name
+        expect(parsed_header.class).to eq(Redhead::Header)
+        expect(parsed_header).not_to be_nil
+        expect(parsed_header.key).to eq(@header_name)
+        expect(parsed_header.value).to eq(@header_value)
+        expect(parsed_header.raw).to eq(@header_raw_name)
       end
 
       it "ignores consecutive non-separating characters by default" do
         parsed_header = Redhead::Header.parse("one very    strange!!! header: anything")
-        parsed_header.key.should == :one_very_strange_header
+        expect(parsed_header.key).to eq(:one_very_strange_header)
       end
 
       it "ignores whitespace around `:` by default" do
@@ -44,106 +44,106 @@ describe Redhead::Header do
         end
 
         spaces.each do |before, after|
-          Redhead::Header.parse("#{@header_raw_name}#{before}:#{after}#{@header_value}").key.should == @header_name
+          expect(Redhead::Header.parse("#{@header_raw_name}#{before}:#{after}#{@header_value}").key).to eq(@header_name)
         end
       end
 
       it "handles values with a separator" do
         header = Redhead::Header.parse("created: 20:30")
-        header.key.should == :created
-        header.value.should == "20:30"
+        expect(header.key).to eq(:created)
+        expect(header.value).to eq("20:30")
       end
     end
   end
 
   describe "#key" do
     it "returns the symbolic header name" do
-      @header.key.should == :a_header_name
+      expect(@header.key).to eq(:a_header_name)
     end
   end
 
   describe "#raw" do
     it "returns the raw header name stored at creation time" do
-      @header.raw.should == @header_raw_name
+      expect(@header.raw).to eq(@header_raw_name)
     end
   end
 
   describe "#value" do
     it "returns the header value" do
-      @header.value.should == @header_value
+      expect(@header.value).to eq(@header_value)
     end
   end
 
   describe "#value=" do
     it "sets a new header value" do
       @header.value = "new value"
-      @header.value.should == "new value"
+      expect(@header.value).to eq("new value")
     end
   end
 
   describe "#to_s" do
     it "returns <raw><separator> <value>" do
-      @header.to_s.should == @full_header_string
+      expect(@header.to_s).to eq(@full_header_string)
     end
 
     context "with a block" do
       it "uses the given block to convert #key to a raw header, and returns the raw string" do
-        @header.to_s { "test" }.should == "test#{@separator} #{@header_value}"
+        expect(@header.to_s { "test" }).to eq("test#{@separator} #{@header_value}")
       end
     end
 
     it "takes an optional argument which specifies the raw header to use, without side-effects" do
-      @header.to_s("test").should_not == @full_header_string
-      @header.to_s("test").should == "test#{@separator} #{@header_value}"
-      @header.to_s.should == @full_header_string
-      @header.to_s.should_not == "test#{@separator} #{@header_value}"
+      expect(@header.to_s("test")).not_to eq(@full_header_string)
+      expect(@header.to_s("test")).to eq("test#{@separator} #{@header_value}")
+      expect(@header.to_s).to eq(@full_header_string)
+      expect(@header.to_s).not_to eq("test#{@separator} #{@header_value}")
     end
 
     it "ignores the given block if there is an explicit raw header name" do
-      @header.to_s("test") { "foo" }.should_not == "foo#{@separator} #{@header_value}"
-      @header.to_s("test") { "foo" }.should == "test#{@separator} #{@header_value}"
+      expect(@header.to_s("test") { "foo" }).not_to eq("foo#{@separator} #{@header_value}")
+      expect(@header.to_s("test") { "foo" }).to eq("test#{@separator} #{@header_value}")
     end
   end
 
   describe "#==(other)" do
     it "returns true if self.raw == other.raw && self.value == other.value, otherwise false" do
       @header_copy.value = "something else entirely"
-      @header.should_not == @header_copy
+      expect(@header).not_to eq(@header_copy)
 
       # same raw name, same value
-      Redhead::Header.new(:a_header_name, "A-Header-Name", "a").should == Redhead::Header.new(:a_header_name, "A-Header-Name", "a")
+      expect(Redhead::Header.new(:a_header_name, "A-Header-Name", "a")).to eq(Redhead::Header.new(:a_header_name, "A-Header-Name", "a"))
 
       # same raw name, different value
-      Redhead::Header.new(:a_header_name, "A-Header-Name", "a").should_not == Redhead::Header.new(:a_header_name, "A-Header-Name", "aaaaaaa")
+      expect(Redhead::Header.new(:a_header_name, "A-Header-Name", "a")).not_to eq(Redhead::Header.new(:a_header_name, "A-Header-Name", "aaaaaaa"))
 
       # different raw name, same value
-      Redhead::Header.new(:a_header_name, "A-Header-Name", "a").should_not == Redhead::Header.new(:a_header_name, "A-Header-Nameeeeeeee", "a")
+      expect(Redhead::Header.new(:a_header_name, "A-Header-Name", "a")).not_to eq(Redhead::Header.new(:a_header_name, "A-Header-Nameeeeeeee", "a"))
     end
   end
 
   describe "#to_s!" do
     it "returns <computed_raw_header><separator> <value>" do
-      @header.to_s!.should == "#{@header_raw_name}#{@separator} #{@header_value}"
-      @header_different_name.to_s!.should == "#{@header_raw_name}#{@separator} something here"
+      expect(@header.to_s!).to eq("#{@header_raw_name}#{@separator} #{@header_value}")
+      expect(@header_different_name.to_s!).to eq("#{@header_raw_name}#{@separator} something here")
     end
 
     context "with a block argument" do
       it "uses the given block to compute the raw header name" do
-        @header.to_s! { "testing" }.should == "testing: #{@header_value}"
-        @header.to_s! { |x| x.to_s.upcase.reverse.gsub("_", "-") }.should == "#{@header_raw_name.to_s.upcase.reverse}: #{@header_value}"
+        expect(@header.to_s! { "testing" }).to eq("testing: #{@header_value}")
+        expect(@header.to_s! { |x| x.to_s.upcase.reverse.gsub("_", "-") }).to eq("#{@header_raw_name.to_s.upcase.reverse}: #{@header_value}")
       end
     end
 
     it "takes an optional argument specifying the raw header name to use, without side-effects" do
-      @header.to_s!("test").should_not == @full_header_string
-      @header.to_s!("test").should == "test#{@separator} #{@header_value}"
-      @header.to_s!.should == @full_header_string
-      @header.to_s!.should_not == "test#{@separator} #{@header_value}"
+      expect(@header.to_s!("test")).not_to eq(@full_header_string)
+      expect(@header.to_s!("test")).to eq("test#{@separator} #{@header_value}")
+      expect(@header.to_s!).to eq(@full_header_string)
+      expect(@header.to_s!).not_to eq("test#{@separator} #{@header_value}")
     end
 
     it "ignores the given block if there is an explicit raw header name" do
-      @header.to_s("test") { "foo" }.should_not == "foo#{@separator} #{@header_value}"
-      @header.to_s("test") { "foo" }.should == "test#{@separator} #{@header_value}"
+      expect(@header.to_s("test") { "foo" }).not_to eq("foo#{@separator} #{@header_value}")
+      expect(@header.to_s("test") { "foo" }).to eq("test#{@separator} #{@header_value}")
     end
   end
 end
