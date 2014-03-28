@@ -124,25 +124,25 @@ describe Redhead::String do
     end
   end
 
-  describe %Q{#headers!(:a => { :raw => "random raw", :key => "random key" })} do
+  describe %Q{#headers!(a: { raw: "random raw", key: "random key" })} do
     it %Q{modifies the header for key :a by calling raw="random raw", and key="random_key"} do
       header = @rh_string.headers[:a_header_value]
       expect(header.raw).not_to eq("random raw")
       expect(header.key).not_to eq("random key")
 
-      @rh_string.headers!(:a_header_value => { :raw => "random raw", :key => "random key" })
+      @rh_string.headers!(a_header_value: { raw: "random raw", key: "random key" })
       expect(header.raw).to eq("random raw")
       expect(header.key).to eq("random key")
     end
 
     it "ignores keys with no matching header" do
-      expect { @rh_string.headers!(:lorem_ipsum_dolor_sit_amettttt => {}) }.to_not raise_error
+      expect { @rh_string.headers!(lorem_ipsum_dolor_sit_amettttt: {}) }.to_not raise_error
     end
 
     it "returns only the changed headers" do
-      expect(@rh_string.headers!(:lorem_ipsum_dolor_sit_amet => {}).empty?).to be_true
-      expect(@rh_string.headers!(:a_header_value => {}).empty?).not_to be_true
-      expect(@rh_string.headers!(:a_header_value => {}).to_a.length).to eq(1)
+      expect(@rh_string.headers!(lorem_ipsum_dolor_sit_amet: {}).empty?).to be_true
+      expect(@rh_string.headers!(a_header_value: {}).empty?).not_to be_true
+      expect(@rh_string.headers!(a_header_value: {}).to_a.length).to eq(1)
     end
   end
 end

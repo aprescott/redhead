@@ -99,7 +99,7 @@ module Redhead
     #     rh_string.headers.to_h
     #     
     #     # A Hash instance:
-    #     #=> { :foo => "bar", :baz => "baaaaz" }
+    #     #=> { foo: "bar", baz: "baaaaz" }
     def to_h
       h = {}
       each do |header|
