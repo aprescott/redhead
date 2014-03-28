@@ -42,7 +42,7 @@ A variable `post` referencing a simple string can be wrapped up in a `Redhead::S
 	=> +"Since time immemorial, ..."
 
 	>> post.headers
-	=> { { :title => "Redhead is for headers" }, { :tags => "redhead, ruby, headers" } }
+	=> { { title: "Redhead is for headers" }, { tags: "redhead, ruby, headers" } }
 
 	>> post
 	=> +"Since time immemorial, ..."
@@ -72,7 +72,7 @@ A Redhead string has the functionality of a regular Ruby string.
 	=> "..., lairomemmi emit ecniS"
 
 	>> post.headers
-	=> { { :title => "Redhead is for headers" }, { :tags => "redhead, ruby, headers" } }
+	=> { { title: "Redhead is for headers" }, { tags: "redhead, ruby, headers" } }
 
 	>> post.replace("Better content.")
 	=> "Better content."
@@ -81,7 +81,7 @@ A Redhead string has the functionality of a regular Ruby string.
 	=> "Better content."
 
 	>> post.headers
-	=> { { :title => "Redhead is for headers" }, { :tags => "redhead, ruby, headers" } }
+	=> { { title: "Redhead is for headers" }, { tags: "redhead, ruby, headers" } }
 
 Note that `String` instance methods which are not receiver-modifying will return proper `String` instances, and so headers will be lost.
 
@@ -90,7 +90,7 @@ Note that `String` instance methods which are not receiver-modifying will return
 In addition, you get access to headers.
 
 	>> post.headers[:title]
-	=> { :title => "Redhead is for headers!" }
+	=> { title: "Redhead is for headers!" }
 
 	>> post.headers[:tags].to_s
 	=> "redhead, ruby, headers"
@@ -106,7 +106,7 @@ Modifying a header value is easy.
 	=> "A change of title."
 
 	>> post.headers[:title]
-	=> { :title => "A change of title." }
+	=> { title: "A change of title." }
 
 And changes will carry through:
 
@@ -118,13 +118,13 @@ And changes will carry through:
 Alternatively, you can work with the header name-value object itself.
 
 	>> title_header = post.headers[:title]
-	=> { :title => "A change of title." }
+	=> { title: "A change of title." }
 
 	>> title_header.value = "A better title."
 	=> "A better title."
 
 	>> title_header
-	=> { :title => "A better title." }
+	=> { title: "A better title." }
 
 	>> title_header.to_s
 	=> "Title: A better title."
@@ -137,7 +137,7 @@ You can also create and add new headers, in a similar way to modifying an existi
 	=> "very"
 
 	>> post.headers
-	=> { { :title => "A better title." }, { :tags => "redhead, ruby, headers" }, { :awesome => "very" } }
+	=> { { title: "A better title." }, { tags: "redhead, ruby, headers" }, { awesome: "very" } }
 
 	>> post.headers.to_s
 	=> "Title: A better title.\nTags: redhead, ruby, headers\nAwesome: very"
@@ -145,7 +145,7 @@ You can also create and add new headers, in a similar way to modifying an existi
 Since Ruby assignments always return the right-hand side, there is an alternative syntax which will return the created header.
 
 	>> post.headers.add(:amount_of_awesome, "high")
-	=> { :amount_of_awesome => "high" }
+	=> { amount_of_awesome: "high" }
 
 	>> post.headers[:amount_of_awesome].to_s
 	=> "Amount-Of-Awesome: high"
@@ -155,13 +155,13 @@ Since Ruby assignments always return the right-hand side, there is an alternativ
 Deleting headers is just as easy.
 
 	>> post.headers
-	=> { { :title => "A better title." }, { :tags => "redhead, ruby, headers" }, { :awesome => "very" }, { :amount_of_awesome => "high" } }
+	=> { { title: "A better title." }, { tags: "redhead, ruby, headers" }, { awesome: "very" }, { amount_of_awesome: "high" } }
 
 	>> post.headers.delete(:amount_of_awesome)
-	=> { :amount_of_awesome => "high" }
+	=> { amount_of_awesome: "high" }
 
 	>> post.headers
-	=> { { :title => "A better title." }, { :tags => "redhead, ruby, headers" }, { :awesome => "very" } }
+	=> { { title: "A better title." }, { tags: "redhead, ruby, headers" }, { awesome: "very" } }
 
 # Finer points
 
@@ -184,7 +184,7 @@ If the original string is:
 Then the header will be turned into a symbol:
 
 	>> str.headers
-	=> { { :wacky_field_name => "value" } }
+	=> { { wacky_field_name: "value" } }
 
 But `to_s` will give the original:
 
@@ -209,16 +209,16 @@ While the default conventions should suit you, you may need to break them. This 
 Redhead has two main conversions which take place, related to header names. One is to convert a raw header name to what is by default a symbol, the other is to convert from the symbol back to the string, where necessary, for example when using `to_s!`. There may be unexpected behaviour if the symbolic header name does not convert to a raw header name, and back again, i.e., in pseudocode, if `to_symbolic_header_name(to_raw_header_name(some_header.key)) != some_header.key`.
 
 	>> str.headers
-	=> { { :awesome_rating => "quite" } }
+	=> { { awesome_rating: "quite" } }
 
-	>> output = str.headers.to_s(:awesome_rating => "Something-Completely-Different") + "\n\n" + str.to_s
+	>> output = str.headers.to_s(awesome_rating: "Something-Completely-Different") + "\n\n" + str.to_s
 	=> "Something-Completely-Different: quite\n\nString's content."
 
 	>> input = Redhead::String[output]
 	=> "String's content."
 
 	>> input.headers
-	=> { { :something_completely_different => "quite" } }
+	=> { { something_completely_different: "quite" } }
 
 	>> input.headers[:awesome_rating]
 	=> nil
@@ -233,13 +233,13 @@ With the above caveats in mind, to actually change the raw header name, you can 
 	=> "quite"
 
 	>> awesome_header = str.headers[:awesome]
-	=> { :awesome => "quite" }
+	=> { awesome: "quite" }
 
 	>> awesome_header.raw = "Some-Awe"
 	=> "Some-Awe"
 
 	>> awesome_header
-	=> { :awesome => "quite" }
+	=> { awesome: "quite" }
 
 	>> awesome_header.to_s
 	=> "Some-Awe: quite"
@@ -251,19 +251,19 @@ You can also change the symbolic header name in the same fashion.
 
 	# Delete to forget about the above
 	>> str.headers.delete(:awesome)
-	=> { :awesome => "quite" }
+	=> { awesome: "quite" }
 
 	>> str.headers[:awesome] = "quite"
 	=> "quite"
 
 	>> awesome_header = str.headers[:awesome]
-	=> { :awesome => "quite" }
+	=> { awesome: "quite" }
 
 	>> awesome_header.key = :different_kind_of_awesome
 	=> :different_kind_of_awesome
 
 	>> awesome_header
-	=> { :different_kind_of_awesome => "quite" }
+	=> { different_kind_of_awesome: "quite" }
 
 	>> awesome_header.to_s
 	=> "Awesome: quite"
@@ -277,7 +277,7 @@ The original symbolic header name will no longer work.
 	=> :awesome
 
 	>> awesome_header
-	=> { :awesome => "quite" }
+	=> { awesome: "quite" }
 
 	>> awesome_header.to_s
 	=> "Awesome: quite"
@@ -288,22 +288,22 @@ The original symbolic header name will no longer work.
 As a further option, there is `headers!`, which allows more one-step control, working with a hash argument. All _changed_ headers are returned.
 
 	>> str.headers
-	=> { { :awesome => "quite" } }
+	=> { { awesome: "quite" } }
 
 	>> str.headers[:temp] = "temp"
 	=> "temp"
 
 	>> str.headers
-	=> { { :awesome => "quite" }, { :temp => "temp" } }
+	=> { { awesome: "quite" }, { temp: "temp" } }
 
 	>> str.headers.to_s
 	=> "Some-Awe: quite\nTemp: temp"
 
-	>> str.headers!(:awesome => { :key => :awesome_rating, :raw => "Awesome-Rating" })
-	=> { { :awesome_rating => "quite" } }
+	>> str.headers!(awesome: { key: :awesome_rating, raw: "Awesome-Rating" })
+	=> { { awesome_rating: "quite" } }
 
 	>> str.headers
-	=> { { :awesome => "quite" }, { :temp => "temp" } }
+	=> { { awesome: "quite" }, { temp: "temp" } }
 
 Omitting one of `:raw` and `:key` will work as you expect.
 
@@ -312,17 +312,17 @@ Omitting one of `:raw` and `:key` will work as you expect.
 To work with a different raw header name, without modifying anything, you can pass a hash to `to_s`. This does not leave a side-effect and is only temporary.
 
 	>> str.headers
-	=> { { :awesome => "quite" }, { :temp => "temp" } }
+	=> { { awesome: "quite" }, { temp: "temp" } }
 
 	>> str.headers.to_s
 	=> "Awesome-Rating: quite\nTemp: temp"
 
-	>> str.headers.to_s(:awesome => "Something-To-Do with Awesome-ness", :temp => "A very TEMPORARY header name")
+	>> str.headers.to_s(awesome: "Something-To-Do with Awesome-ness", temp: "A very TEMPORARY header name")
 	=> "Something-To-Do with Awesome-ness: quite\nA very TEMPORARY header name"
 
 	# Nothing changed.
 	>> str.headers
-	=> { { :awesome => "quite" }, { :temp => "temp" } }
+	=> { { awesome: "quite" }, { temp: "temp" } }
 
 	>> str.headers.to_s
 	=> "Awesome-Rating: quite\nTemp: temp"
@@ -332,16 +332,16 @@ To work with a different raw header name, without modifying anything, you can pa
 The custom raw header name can also be given explicitly at creation time.
 
 	>> str.headers
-	=> { { :awesome => "quite" }, { :temp => "temp" } }
+	=> { { awesome: "quite" }, { temp: "temp" } }
 
 	>> str.headers.delete(:temp)
-	=> { :temp => "temp" }
+	=> { temp: "temp" }
 
 	>> str.headers
-	=> { { :awesome => "quite" } }
+	=> { { awesome: "quite" } }
 
 	>> str.headers.add(:temporary, "temp", "A-Rather-Temporary-Value")
-	=> { :temp => "temp" }
+	=> { temp: "temp" }
 
 	>> str.headers.to_s
 	=> "Awesome-Rating: quite\nA-Rather-Temporary-Value: temp"

@@ -148,7 +148,7 @@ describe Redhead::HeaderSet do
       expect(@header_set.to_s).to eq(@headers.map { |header| header.to_s }.join("\n"))
     end
 
-    context %Q{with a hash argument :a => "something raw"} do
+    context %Q{with a hash argument a: "something raw"} do
       def modified_full_header_set_string
         str = "something raw: value_a\n"
         str += @headers[1..-1].map { |e| "header_#{e.key}: value_#{e.key}" }.join("\n")
@@ -158,7 +158,7 @@ describe Redhead::HeaderSet do
       it %Q{sets the header with key :a to have #raw == "one" and #value == 1} do
         str = modified_full_header_set_string
 
-        expect(@header_set.to_s(:a => "something raw")).to eq(str)
+        expect(@header_set.to_s(a: "something raw")).to eq(str)
         expect(@header_set[:a].raw).not_to eq("something raw")
         expect(@header_set[:a].raw).to eq("header_a")
       end
@@ -166,7 +166,7 @@ describe Redhead::HeaderSet do
       it "does not leave a side-effect" do
         str = modified_full_header_set_string
 
-        expect(@header_set.to_s(:a => "something raw")).to eq(str)
+        expect(@header_set.to_s(a: "something raw")).to eq(str)
         expect(@header_set[:a].raw).not_to eq("something raw")
         expect(@header_set[:a].raw).to eq("header_a")
       end
@@ -186,7 +186,7 @@ describe Redhead::HeaderSet do
       end
 
       it "follows the hash argument first, falling back to the given block" do
-        expect(@header_set.to_s(:a => "something raw") { "NOT RAW AT ALL" }.split("\n").first).to eq("something raw: value_a")
+        expect(@header_set.to_s(a: "something raw") { "NOT RAW AT ALL" }.split("\n").first).to eq("something raw: value_a")
       end
     end
   end

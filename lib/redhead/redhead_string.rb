@@ -75,7 +75,7 @@ module Redhead
 
     # Modifies the headers in the set, using the given _hash_, which has the form
     # 
-    #     { :some_header => { :raw => a, :key => b }, :another_header => ..., ... }
+    #     { some_header: { raw: a, key: b }, another_header: ..., ... }
     # 
     # Change the header with key :some_header such that its new raw name is _a_ and its new key name
     # is _b_. Returns a HeaderSet object containing the changed Header objects.
