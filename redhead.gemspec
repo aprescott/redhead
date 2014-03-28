@@ -11,4 +11,6 @@ Gem::Specification.new do |s|
   s.test_files   = Dir["test/*"]
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
+  s.add_development_dependency "coveralls"
+  s.add_development_dependency "simplecov"
 end
